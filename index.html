@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en" style="background:#0a0a0f">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>html,body{background:#0a0a0f}</style>
+<title>The Power of ₩10,000 | What Can Your Money Buy in Korea?</title>
+<meta name="description" content="See what your money can actually buy in Korea! Real-time exchange rates show you the purchasing power of your currency in Korean Won.">
+<style>
+:root{--bg:#0a0a0f;--surface:#13131f;--surface2:#1a1a2e;--border:#252540;--text:#f0f0ff;--text-soft:#9090bb;--text-faint:#44446a;--red:#ff4757;--red-soft:rgba(255,71,87,0.12);--gold:#ffd166;--gold-soft:rgba(255,209,102,0.12);--green:#2ed573;--green-soft:rgba(46,213,115,0.10);--blue:#4a90e2;--blue-soft:rgba(74,144,226,0.12);}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 20% 20%,rgba(255,71,87,0.07) 0%,transparent 50%),radial-gradient(ellipse at 80% 80%,rgba(255,209,102,0.06) 0%,transparent 50%);pointer-events:none;z-index:0;}
+header{text-align:center;padding:56px 24px 36px;position:relative;z-index:1;}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:5px 16px;background:var(--gold-soft);border:1px solid rgba(255,209,102,0.3);border-radius:20px;font-size:11px;color:var(--gold);font-weight:600;margin-bottom:18px;}
+h1{font-size:clamp(28px,7vw,56px);font-weight:900;line-height:1.1;letter-spacing:-0.02em;margin-bottom:12px;}
+.won{color:var(--gold);}
+.subtitle{font-size:15px;color:var(--text-soft);line-height:1.7;max-width:500px;margin:0 auto 8px;font-weight:300;}
+.rate-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;background:var(--green-soft);border:1px solid rgba(46,213,115,0.2);border-radius:20px;font-size:11px;color:var(--green);font-family:'Courier New',monospace;margin-top:10px;}
+.rate-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
+main{max-width:860px;margin:0 auto;padding:0 20px 80px;position:relative;z-index:1;}
+.currency-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:28px;margin-bottom:20px;position:relative;overflow:hidden;}
+.currency-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--red),var(--gold),var(--green));}
+.card-title{font-size:11px;font-weight:600;color:var(--text-soft);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:18px;font-family:'Courier New',monospace;}
+.currency-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:8px;margin-bottom:20px;}
+.currency-btn{padding:10px 6px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text-soft);font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;text-align:center;}
+.currency-btn:hover{border-color:var(--gold);color:var(--gold);}
+.currency-btn.active{background:var(--gold);border-color:var(--gold);color:#000;font-weight:700;}
+.currency-btn .flag{font-size:18px;display:block;margin-bottom:3px;}
+.currency-btn .code{font-size:10px;}
+.amount-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.al-text{font-size:13px;color:var(--text-soft);}
+.al-val{font-size:22px;font-weight:800;color:var(--gold);font-family:'Courier New',monospace;}
+.al-krw{font-size:13px;color:var(--text-soft);margin-top:2px;text-align:right;}
+.amount-btns{display:flex;gap:8px;flex-wrap:wrap;}
+.amount-btn{padding:9px 16px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text-soft);font-family:'Courier New',monospace;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;}
+.amount-btn:hover{border-color:var(--gold);color:var(--gold);}
+.amount-btn.active{background:var(--gold);border-color:var(--gold);color:#000;}
+.results-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px;}
+.rh-title{font-size:18px;font-weight:800;}
+.share-btn{display:flex;align-items:center;gap:6px;padding:9px 18px;background:linear-gradient(135deg,var(--red),var(--gold));color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .15s;}
+.share-btn:hover{opacity:0.85;}
+.items-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:24px;}
+@media(max-width:480px){.items-grid{grid-template-columns:1fr 1fr;}}
+.item-card{background:var(--surface);border:1.5px solid var(--border);border-radius:14px;padding:16px 14px;position:relative;overflow:hidden;transition:border-color .2s,transform .15s;}
+.item-card:hover{border-color:var(--gold);transform:translateY(-2px);}
+.item-card.highlight{border-color:var(--gold);background:linear-gradient(135deg,rgba(255,209,102,0.06),var(--surface));}
+.ic-emoji{font-size:32px;margin-bottom:8px;display:block;}
+.ic-qty{font-size:28px;font-weight:900;color:var(--gold);font-family:'Courier New',monospace;line-height:1;margin-bottom:4px;}
+.ic-unit{font-size:14px;color:var(--text-soft);font-weight:400;}
+.ic-name{font-size:13px;font-weight:700;margin-bottom:3px;}
+.ic-price{font-size:11px;color:var(--text-faint);font-family:'Courier New',monospace;}
+.ic-tag{position:absolute;top:10px;right:10px;font-size:9px;font-weight:700;padding:2px 7px;border-radius:8px;text-transform:uppercase;}
+.tag-food{background:rgba(255,71,87,0.15);color:var(--red);}
+.tag-transport{background:var(--blue-soft);color:var(--blue);}
+.tag-experience{background:var(--green-soft);color:var(--green);}
+.tag-shopping{background:var(--gold-soft);color:var(--gold);}
+.tips-section{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:20px;}
+.tips-title{font-size:14px;font-weight:700;color:var(--gold);margin-bottom:14px;}
+.tip-item{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+.tip-item:last-child{border-bottom:none;}
+.tip-icon{font-size:20px;flex-shrink:0;}
+.tip-text{font-size:13px;color:var(--text-soft);line-height:1.6;}
+.tip-text strong{color:var(--text);font-weight:600;}
+.compare-section{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:20px;}
+.compare-title{font-size:14px;font-weight:700;margin-bottom:16px;color:var(--text-soft);font-family:'Courier New',monospace;letter-spacing:0.1em;text-transform:uppercase;}
+.compare-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+.compare-row:last-child{border-bottom:none;}
+.cr-item{flex:1;font-size:13px;color:var(--text-soft);}
+.cr-arrow{color:var(--text-faint);font-size:12px;}
+.cr-krw{min-width:100px;text-align:right;font-family:'Courier New',monospace;font-size:13px;color:var(--gold);}
+.cr-desc{font-size:12px;color:var(--text-faint);margin-top:2px;}
+.nomad-section{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:20px;}
+.nomad-header{background:linear-gradient(135deg,rgba(74,144,226,0.15),rgba(46,213,115,0.1));padding:18px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+.nomad-header h3{font-size:15px;font-weight:700;}
+.nomad-body{padding:20px 24px;}
+.nomad-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+@media(max-width:480px){.nomad-grid{grid-template-columns:1fr;}}
+.nomad-item{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;}
+.ni-label{font-size:10px;color:var(--text-faint);font-family:'Courier New',monospace;text-transform:uppercase;margin-bottom:5px;}
+.ni-val{font-size:16px;font-weight:700;margin-bottom:2px;}
+.ni-krw{font-size:11px;color:var(--text-soft);font-family:'Courier New',monospace;}
+.share-result{display:none;background:linear-gradient(135deg,var(--surface),var(--surface2));border:1px solid var(--border);border-radius:16px;padding:24px;text-align:center;margin-bottom:20px;}
+.share-result.show{display:block;animation:fadeUp .4s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.sr-main{font-size:18px;font-weight:800;margin-bottom:8px;line-height:1.6;}
+.sr-sub{font-size:13px;color:var(--text-soft);margin-bottom:16px;}
+.copy-btn{display:inline-flex;align-items:center;gap:6px;padding:10px 22px;background:var(--gold);color:#000;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .15s;}
+.copy-btn:hover{opacity:0.85;}
+footer{text-align:center;padding:28px 20px;font-size:11px;color:var(--text-faint);line-height:1.9;border-top:1px solid var(--border);max-width:860px;margin:0 auto;position:relative;z-index:1;}
+</style>
+</head>
+<body>
+<header>
+  <div class="badge" id="badgeText">💰 Live Exchange Rate · Updated Daily</div>
+  <h1>The Power of <span class="won">₩10,000</span></h1>
+  <p class="subtitle" id="headerSubtitle">See what your money can actually buy in Korea.<br>Real prices, real experiences — not just numbers.</p>
+  <div class="rate-badge"><span class="rate-dot"></span><span id="rateSource">Loading live rate...</span></div>
+</header>
+<main>
+  <div class="currency-card">
+    <div class="card-title" id="labelSelectCurrency">Select Your Currency</div>
+    <div class="currency-grid" id="currencyGrid"></div>
+    <div class="amount-section">
+      <div class="amount-label">
+        <span class="al-text" id="labelYourAmount">Your amount</span>
+        <div>
+          <div class="al-val" id="amountDisplay">$10</div>
+          <div class="al-krw" id="krwDisplay">≈ ₩13,000 KRW</div>
+          <div style="font-size:10px;color:var(--text-faint);font-family:'Courier New',monospace;margin-top:3px" id="rateDisplay">1 USD ≈ ₩1,300</div>
+        </div>
+      </div>
+      <div class="amount-btns" id="amountBtns"></div>
+    </div>
+  </div>
+  <div id="resultsSection">
+    <div class="results-header">
+      <div class="rh-title" id="resultsTitle">In Korea, <span style="color:var(--gold)">$10</span> can buy...</div>
+      <button class="share-btn" onclick="showShare()" id="shareBtn">📤 Share Result</button>
+    </div>
+    <div class="items-grid" id="itemsGrid"></div>
+    <div class="share-result" id="shareResult">
+      <div class="sr-main" id="shareMain"></div>
+      <div class="sr-sub" id="shareSub">Share this with your friends planning a Korea trip! 🇰🇷</div>
+      <button class="copy-btn" onclick="copyShare()" id="copyBtn">📋 Copy & Share</button>
+    </div>
+    <div class="tips-section">
+      <div class="tips-title" id="tipsTitle">💡 Korea Money Pro Tips</div>
+      <div id="tipsList"></div>
+    </div>
+    <div class="compare-section">
+      <div class="compare-title" id="compareTitle">📊 Korea vs Your Country — Price Comparison</div>
+      <div id="compareRows"></div>
+    </div>
+    <div class="nomad-section">
+      <div class="nomad-header">
+        <span style="font-size:22px">💻</span>
+        <div>
+          <h3 id="nomadTitle">Working in Korea</h3>
+          <div style="font-size:12px;color:var(--text-soft)" id="nomadSub">Costs for digital nomads & long-stay visitors</div>
+        </div>
+      </div>
+      <div class="nomad-body"><div class="nomad-grid" id="nomadGrid"></div></div>
+    </div>
+  </div>
+</main>
+<footer>
+  Exchange rates: fawazahmed0/exchange-api (updated daily) · Prices based on 2025 Korea market average<br>
+  Last updated: <span id="lastUpdated"></span>
+</footer>
+
+<script>
+// ══ 다국어 데이터 ══
+const i18n = {
+  en:{
+    badge:'💰 Live Exchange Rate · Updated Daily',
+    subtitle:'See what your money can actually buy in Korea.<br>Real prices, real experiences — not just numbers.',
+    selectCurrency:'Select Your Currency', yourAmount:'Your amount',
+    canBuy:(s,a)=>`In Korea, <span style="color:var(--gold)">${s}${a.toLocaleString()}</span> can buy...`,
+    shareBtn:'📤 Share Result', shareSub:'Share with friends planning a Korea trip! 🇰🇷',
+    copyBtn:'📋 Copy & Share', copiedBtn:'✅ Copied!',
+    tipsTitle:'💡 Korea Money Pro Tips',
+    compareTitle:'📊 Korea vs Your Country — Price Comparison',
+    nomadTitle:'Working in Korea', nomadSub:'Costs for digital nomads & long-stay visitors',
+    liveRate:(d)=>`✅ Live rate as of today · ${d}`, offlineRate:'⚠️ Offline fallback rate',
+    loading:'Loading live rate...',
+    tips:[
+      {icon:'🙅',title:'No tipping culture!',text:'Tipping is not expected in Korea — remove it from your budget entirely.'},
+      {icon:'🚇',title:'T-money Card saves 30%+',text:'Buy at any convenience store for ₩2,500. Discounted fares + free transfers within 30 min.'},
+      {icon:'🏪',title:'Convenience stores are your best friend.',text:'CU, GS25, 7-Eleven — full meal under ₩3,000. Open 24/7 everywhere.'},
+      {icon:'💳',title:'Cash vs Card:',text:'Most places accept cards, but street stalls are cash only. Keep ₩50,000 handy.'},
+      {icon:'🍜',title:'Eat where locals eat.',text:'"백반집" offer rice + 4-5 side dishes for ₩7,000~9,000. Way cheaper than tourist areas.'},
+    ],
+    items:[
+      {emoji:'🍚',name:'Gimbap (김밥)',desc:'Korean rice roll — best budget meal!'},
+      {emoji:'🍜',name:'Ramyeon at convenience store',desc:'Freshly cooked at GS25/CU'},
+      {emoji:'☕',name:'Americano (local café)',desc:'Not Starbucks — local café price'},
+      {emoji:'🍗',name:'Fried chicken (치킨)',desc:'Half chicken via delivery app'},
+      {emoji:'🍱',name:'Convenience store meal set',desc:'Triangle kimbap ×2 + drink'},
+      {emoji:'🥩',name:'Korean BBQ (삼겹살)',desc:'Per person at a local restaurant'},
+      {emoji:'🚇',name:'Seoul Metro ride',desc:'Single ride with T-money card'},
+      {emoji:'🚌',name:'City bus ride',desc:'T-money card (free transfer!)'},
+      {emoji:'🚕',name:'Kakao Taxi (base fare)',desc:'Starting fare in Seoul'},
+      {emoji:'🏯',name:'Gyeongbokgung entry',desc:'Palace admission ticket'},
+      {emoji:'👘',name:'Hanbok rental (1hr)',desc:'Near Gyeongbokgung Palace'},
+      {emoji:'🎤',name:'Norebang (1hr, small room)',desc:'Korean karaoke per person'},
+      {emoji:'🛍️',name:'Myeongdong face mask',desc:'Sheet mask at street stalls'},
+      {emoji:'🧴',name:'K-beauty serum (drugstore)',desc:'At Olive Young or Daiso'},
+      {emoji:'🏨',name:'Guesthouse dorm bed',desc:'Per night in Seoul/Busan'},
+    ],
+    compareItems:[
+      {item:'Big Mac',desc:"McDonald's Korea price"},
+      {item:'Starbucks Latte (Grande)',desc:'Slightly cheaper than US'},
+      {item:'Movie ticket',desc:'CGV standard seat'},
+      {item:'Gym (monthly)',desc:'Local gym membership'},
+      {item:'Haircut (men)',desc:'At a local barbershop'},
+    ],
+    nomadCosts:[
+      {label:'Co-working space (1 day)',desc:'FastFive, WeWork'},
+      {label:'Café working (coffee + WiFi)',desc:'Most cafés allow laptop work'},
+      {label:'SIM card (30 days, unlimited)',desc:'KT, SKT tourist SIM'},
+      {label:'Pocket WiFi rental (1 day)',desc:'Available at airports'},
+      {label:'Studio apartment (1 month)',desc:'Goshiwon in Seoul'},
+      {label:'Monthly subway pass',desc:'Seoul metro monthly pass'},
+    ],
+  },
+  ja:{
+    badge:'💰 為替レートをリアルタイムで反映 · 毎日更新',
+    subtitle:'韓国でお金がどれだけ使えるか見てみよう！<br>リアルな物価、リアルな体験。',
+    selectCurrency:'通貨を選択', yourAmount:'金額',
+    canBuy:(s,a)=>`韓国では <span style="color:var(--gold)">${s}${a.toLocaleString()}</span> でこれだけ買えます`,
+    shareBtn:'📤 結果をシェア', shareSub:'韓国旅行を計画中の友達にシェアしよう！🇰🇷',
+    copyBtn:'📋 コピーしてシェア', copiedBtn:'✅ コピー完了！',
+    tipsTitle:'💡 韓国旅行のお金の豆知識',
+    compareTitle:'📊 韓国 vs 日本 — 価格比較',
+    nomadTitle:'韓国でのワーケーション', nomadSub:'デジタルノマド・長期滞在者向けコスト',
+    liveRate:(d)=>`✅ 本日のライブレート · ${d}`, offlineRate:'⚠️ オフラインレート（最新でない可能性あり）',
+    loading:'レートを読み込み中...',
+    tips:[
+      {icon:'🙅',title:'チップ文化なし！',text:'韓国ではチップ不要。むしろ失礼になることも。予算から完全に除外してOK。'},
+      {icon:'🚇',title:'T-moneyカードで30%以上節約',text:'コンビニで₩2,500で購入。割引運賃＋30分以内の無料乗り継ぎ利用可能。'},
+      {icon:'🏪',title:'コンビニが最強の味方',text:'CU、GS25、7-Eleven — おにぎり＋ラーメンで₩3,000以下。24時間営業。'},
+      {icon:'💳',title:'現金 vs カード',text:'ほとんどの場所でカードOK。ただし市場や屋台は現金のみ。₩50,000は携帯して。'},
+      {icon:'🍜',title:'地元民が行くお店で食べよう',text:'백반집（ペクパンチプ）は定食がたった₩7,000〜9,000。観光地より断然安い。'},
+    ],
+    items:[
+      {emoji:'🍚',name:'キンパ（김밥）',desc:'韓国式海苔巻き — 最高のコスパ飯！'},
+      {emoji:'🍜',name:'コンビニラーメン',desc:'GS25・CUで作りたてを食べられます'},
+      {emoji:'☕',name:'アメリカーノ（地元カフェ）',desc:'スタバではなく地元カフェで'},
+      {emoji:'🍗',name:'フライドチキン（치킨）',desc:'デリバリーアプリで半羽分'},
+      {emoji:'🍱',name:'コンビニセット',desc:'おにぎり×2＋飲み物'},
+      {emoji:'🥩',name:'韓国BBQ（サムギョプサル）',desc:'地元レストランで1人前'},
+      {emoji:'🚇',name:'ソウル地下鉄1回',desc:'T-moneyカード使用時'},
+      {emoji:'🚌',name:'市内バス1回',desc:'T-money（無料乗り継ぎあり）'},
+      {emoji:'🚕',name:'カカオタクシー（初乗り）',desc:'ソウル市内の初乗り運賃'},
+      {emoji:'🏯',name:'景福宮入場料',desc:'宮殿の入場チケット'},
+      {emoji:'👘',name:'韓服レンタル（1時間）',desc:'景福宮近く'},
+      {emoji:'🎤',name:'ノレバン（1時間・小部屋）',desc:'韓国カラオケ1人あたり'},
+      {emoji:'🛍️',name:'明洞フェイスマスク',desc:'屋台のシートマスク'},
+      {emoji:'🧴',name:'K-beautyセラム（薬局）',desc:'オリーブヤング・ダイソーで'},
+      {emoji:'🏨',name:'ゲストハウスドミトリー',desc:'ソウル・釜山で1泊'},
+    ],
+    compareItems:[
+      {item:'ビッグマック',desc:'韓国マクドナルド価格'},
+      {item:'スタバラテ（グランデ）',desc:'日本より若干安め'},
+      {item:'映画チケット',desc:'CGVスタンダードシート'},
+      {item:'ジム（月額）',desc:'地元ジム会員費'},
+      {item:'散髪（メンズ）',desc:'地元の理髪店で'},
+    ],
+    nomadCosts:[
+      {label:'コワーキング（1日）',desc:'FastFive、WeWork'},
+      {label:'カフェ作業（コーヒー＋WiFi）',desc:'ほぼ全カフェでPC作業OK'},
+      {label:'SIMカード（30日・無制限）',desc:'KT、SKT観光者向けSIM'},
+      {label:'ポケットWiFiレンタル（1日）',desc:'空港で購入可'},
+      {label:'ワンルーム（1ヶ月）',desc:'ソウルのコシウォン'},
+      {label:'地下鉄月定期',desc:'ソウル地下鉄月額パス'},
+    ],
+  },
+  zh:{
+    badge:'💰 实时汇率 · 每日更新',
+    subtitle:'看看你的钱在韩国能买什么！<br>真实物价，真实体验。',
+    selectCurrency:'选择货币', yourAmount:'金额',
+    canBuy:(s,a)=>`在韩国，<span style="color:var(--gold)">${s}${a.toLocaleString()}</span> 可以买到...`,
+    shareBtn:'📤 分享结果', shareSub:'分享给你正在计划韩国之旅的朋友！🇰🇷',
+    copyBtn:'📋 复制并分享', copiedBtn:'✅ 已复制！',
+    tipsTitle:'💡 韩国消费小贴士',
+    compareTitle:'📊 韩国 vs 你的国家 — 价格对比',
+    nomadTitle:'在韩国工作', nomadSub:'数字游民和长期旅居者费用参考',
+    liveRate:(d)=>`✅ 今日实时汇率 · ${d}`, offlineRate:'⚠️ 离线汇率（可能不是最新数据）',
+    loading:'正在加载汇率...',
+    tips:[
+      {icon:'🙅',title:'没有小费文化！',text:'韩国完全不需要给小费，旅行预算里不用考虑这一项。'},
+      {icon:'🚇',title:'T-money卡节省30%以上',text:'在便利店花₩2,500购买，享受优惠票价，30分钟内免费换乘。'},
+      {icon:'🏪',title:'便利店是你的好朋友',text:'CU、GS25、7-Eleven — 饭团+方便面不到₩3,000，全年24小时营业。'},
+      {icon:'💳',title:'现金 vs 刷卡',text:'大多数地方可以刷卡，但传统市场和街头小吃只收现金。随身带₩50,000现金。'},
+      {icon:'🍜',title:'去当地人吃饭的地方',text:'"백반집"米饭+4-5道小菜只需₩7,000~9,000，比旅游区便宜很多。'},
+    ],
+    items:[
+      {emoji:'🍚',name:'紫菜包饭（김밥）',desc:'韩式紫菜卷 — 最佳经济餐！'},
+      {emoji:'🍜',name:'便利店泡面',desc:'在GS25/CU现煮热乎乎的'},
+      {emoji:'☕',name:'美式咖啡（咖啡店）',desc:'当地咖啡店，非星巴克'},
+      {emoji:'🍗',name:'炸鸡（치킨）',desc:'外卖APP点半只鸡'},
+      {emoji:'🍱',name:'便利店套餐',desc:'饭团×2+饮料'},
+      {emoji:'🥩',name:'韩式烤肉（삼겹살）',desc:'当地餐厅人均消费'},
+      {emoji:'🚇',name:'首尔地铁一次',desc:'使用T-money卡'},
+      {emoji:'🚌',name:'市内公交一次',desc:'T-money卡（免费换乘）'},
+      {emoji:'🚕',name:'Kakao打车（起步价）',desc:'首尔市内起步价'},
+      {emoji:'🏯',name:'景福宫门票',desc:'宫殿入场券'},
+      {emoji:'👘',name:'韩服租借（1小时）',desc:'景福宫附近'},
+      {emoji:'🎤',name:'KTV包厢（1小时·小间）',desc:'韩国卡拉OK人均'},
+      {emoji:'🛍️',name:'明洞面膜',desc:'街头摊位的面膜贴'},
+      {emoji:'🧴',name:'K-beauty精华（药妆店）',desc:'在Olive Young或大创'},
+      {emoji:'🏨',name:'青年旅社床位',desc:'首尔/釜山每晚'},
+    ],
+    compareItems:[
+      {item:'巨无霸',desc:'韩国麦当劳价格'},
+      {item:'星巴克拿铁（大杯）',desc:'略比国内便宜'},
+      {item:'电影票',desc:'CGV标准座位'},
+      {item:'健身房（月费）',desc:'当地健身房会员费'},
+      {item:'理发（男士）',desc:'当地理发店'},
+    ],
+    nomadCosts:[
+      {label:'联合办公（1天）',desc:'FastFive、WeWork'},
+      {label:'咖啡馆办公（咖啡+WiFi）',desc:'几乎所有咖啡馆允许使用电脑'},
+      {label:'SIM卡（30天·无限流量）',desc:'KT、SKT旅游SIM'},
+      {label:'随身WiFi租借（1天）',desc:'机场有售'},
+      {label:'单间公寓（1个月）',desc:'首尔考试院'},
+      {label:'地铁月票',desc:'首尔地铁月卡'},
+    ],
+  },
+  tw:{
+    badge:'💰 即時匯率 · 每日更新',
+    subtitle:'看看你的錢在韓國能買什麼！<br>真實物價，真實體驗。',
+    selectCurrency:'選擇貨幣', yourAmount:'金額',
+    canBuy:(s,a)=>`在韓國，<span style="color:var(--gold)">${s}${a.toLocaleString()}</span> 可以買到...`,
+    shareBtn:'📤 分享結果', shareSub:'分享給正在計畫韓國之旅的朋友！🇰🇷',
+    copyBtn:'📋 複製並分享', copiedBtn:'✅ 已複製！',
+    tipsTitle:'💡 韓國消費小撇步',
+    compareTitle:'📊 韓國 vs 你的國家 — 價格比較',
+    nomadTitle:'在韓國工作', nomadSub:'數位遊牧族和長期旅居者費用參考',
+    liveRate:(d)=>`✅ 今日即時匯率 · ${d}`, offlineRate:'⚠️ 離線匯率（可能不是最新資料）',
+    loading:'正在載入匯率...',
+    tips:[
+      {icon:'🙅',title:'沒有小費文化！',text:'韓國完全不需要給小費，旅行預算不用考慮這一項。'},
+      {icon:'🚇',title:'T-money卡省30%以上',text:'在便利商店花₩2,500購買，享受優惠票價，30分鐘內免費轉乘。'},
+      {icon:'🏪',title:'便利商店是你的好朋友',text:'CU、GS25、7-Eleven — 飯糰+泡麵不到₩3,000，全年24小時營業。'},
+      {icon:'💳',title:'現金 vs 刷卡',text:'大多數地方可以刷卡，但傳統市場和路邊攤只收現金。隨身帶₩50,000現金。'},
+      {icon:'🍜',title:'去當地人吃飯的地方',text:'"백반집"白飯+4-5道小菜只需₩7,000~9,000，比觀光區便宜很多。'},
+    ],
+    items:[
+      {emoji:'🍚',name:'紫菜飯捲（김밥）',desc:'韓式紫菜捲 — 最佳經濟餐！'},
+      {emoji:'🍜',name:'便利商店泡麵',desc:'在GS25/CU現煮熱呼呼的'},
+      {emoji:'☕',name:'美式咖啡（咖啡廳）',desc:'當地咖啡廳，非星巴克'},
+      {emoji:'🍗',name:'炸雞（치킨）',desc:'外送APP點半隻雞'},
+      {emoji:'🍱',name:'便利商店套餐',desc:'飯糰×2+飲料'},
+      {emoji:'🥩',name:'韓式烤肉（삼겹살）',desc:'當地餐廳人均消費'},
+      {emoji:'🚇',name:'首爾地鐵一次',desc:'使用T-money卡'},
+      {emoji:'🚌',name:'市內公車一次',desc:'T-money卡（免費轉乘）'},
+      {emoji:'🚕',name:'Kakao叫車（起跳價）',desc:'首爾市內起跳價'},
+      {emoji:'🏯',name:'景福宮門票',desc:'宮殿入場券'},
+      {emoji:'👘',name:'韓服租借（1小時）',desc:'景福宮附近'},
+      {emoji:'🎤',name:'KTV包廂（1小時·小間）',desc:'韓國卡拉OK人均'},
+      {emoji:'🛍️',name:'明洞面膜',desc:'路邊攤的面膜貼'},
+      {emoji:'🧴',name:'K-beauty精華（藥妝店）',desc:'在Olive Young或大創'},
+      {emoji:'🏨',name:'青年旅館床位',desc:'首爾/釜山每晚'},
+    ],
+    compareItems:[
+      {item:'大麥克',desc:'韓國麥當勞價格'},
+      {item:'星巴克拿鐵（大杯）',desc:'略比台灣便宜'},
+      {item:'電影票',desc:'CGV標準座位'},
+      {item:'健身房（月費）',desc:'當地健身房會員費'},
+      {item:'理髮（男士）',desc:'當地理髮店'},
+    ],
+    nomadCosts:[
+      {label:'共同工作空間（1天）',desc:'FastFive、WeWork'},
+      {label:'咖啡廳辦公（咖啡+WiFi）',desc:'幾乎所有咖啡廳允許使用電腦'},
+      {label:'SIM卡（30天·無限流量）',desc:'KT、SKT旅遊SIM'},
+      {label:'隨身WiFi租借（1天）',desc:'機場有售'},
+      {label:'套房公寓（1個月）',desc:'首爾考試院'},
+      {label:'地鐵月票',desc:'首爾地鐵月卡'},
+    ],
+  },
+  th:{
+    badge:'💰 อัตราแลกเปลี่ยนสด · อัพเดทรายวัน',
+    subtitle:'ดูว่าเงินของคุณซื้ออะไรได้บ้างในเกาหลี<br>ราคาจริง ประสบการณ์จริง',
+    selectCurrency:'เลือกสกุลเงิน', yourAmount:'จำนวนเงิน',
+    canBuy:(s,a)=>`ในเกาหลี <span style="color:var(--gold)">${s}${a.toLocaleString()}</span> ซื้อได้...`,
+    shareBtn:'📤 แชร์ผลลัพธ์', shareSub:'แชร์ให้เพื่อนที่กำลังวางแผนเที่ยวเกาหลี! 🇰🇷',
+    copyBtn:'📋 คัดลอกและแชร์', copiedBtn:'✅ คัดลอกแล้ว!',
+    tipsTitle:'💡 เคล็ดลับการใช้เงินในเกาหลี',
+    compareTitle:'📊 เกาหลี vs ประเทศคุณ — เปรียบเทียบราคา',
+    nomadTitle:'ทำงานในเกาหลี', nomadSub:'ค่าใช้จ่ายสำหรับ Digital Nomad และผู้พักระยะยาว',
+    liveRate:(d)=>`✅ อัตราแลกเปลี่ยนวันนี้ · ${d}`, offlineRate:'⚠️ อัตราสำรอง (อาจไม่ใช่ข้อมูลล่าสุด)',
+    loading:'กำลังโหลดอัตราแลกเปลี่ยน...',
+    tips:[
+      {icon:'🙅',title:'ไม่มีวัฒนธรรมทิป!',text:'ในเกาหลีไม่ต้องให้ทิปเลย ไม่ต้องคิดถึงเรื่องนี้ในงบประมาณ'},
+      {icon:'🚇',title:'T-money Card ประหยัดกว่า 30%',text:'ซื้อที่ร้านสะดวกซื้อราคา ₩2,500 ค่าโดยสารถูกลงและต่อรถฟรีภายใน 30 นาที'},
+      {icon:'🏪',title:'ร้านสะดวกซื้อคือเพื่อนที่ดีที่สุด',text:'CU, GS25, 7-Eleven — ข้าวปั้น+ราเมนไม่ถึง ₩3,000 เปิด 24 ชั่วโมง'},
+      {icon:'💳',title:'เงินสด vs บัตร',text:'ส่วนใหญ่รับบัตร แต่แผงขายอาหารรับเงินสดเท่านั้น พก ₩50,000 ไว้'},
+      {icon:'🍜',title:'กินอาหารที่คนท้องถิ่นไปกิน',text:'"백반집" ข้าว+กับข้าว 4-5 อย่าง แค่ ₩7,000~9,000 ถูกกว่าย่านท่องเที่ยวมาก'},
+    ],
+    items:[
+      {emoji:'🍚',name:'คิมบับ (김밥)',desc:'ข้าวห่อสาหร่าย — อาหารประหยัดที่ดีที่สุด!'},
+      {emoji:'🍜',name:'ราเมนร้านสะดวกซื้อ',desc:'ต้มสดที่ GS25/CU'},
+      {emoji:'☕',name:'อเมริกาโน่ (ร้านกาแฟ)',desc:'ร้านกาแฟท้องถิ่น ไม่ใช่ Starbucks'},
+      {emoji:'🍗',name:'ไก่ทอด (치킨)',desc:'ไก่ครึ่งตัวสั่งผ่านแอป'},
+      {emoji:'🍱',name:'เซ็ตร้านสะดวกซื้อ',desc:'ข้าวปั้น×2+เครื่องดื่ม'},
+      {emoji:'🥩',name:'บาร์บีคิวเกาหลี (삼겹살)',desc:'ต่อคนที่ร้านท้องถิ่น'},
+      {emoji:'🚇',name:'รถไฟใต้ดินโซล 1 ครั้ง',desc:'ใช้บัตร T-money'},
+      {emoji:'🚌',name:'รถเมล์ในเมือง 1 ครั้ง',desc:'T-money (ต่อรถฟรี!)'},
+      {emoji:'🚕',name:'Kakao Taxi (ค่าเริ่มต้น)',desc:'ค่าเริ่มต้นในโซล'},
+      {emoji:'🏯',name:'ค่าเข้าคยองบกกุง',desc:'บัตรเข้าชมพระราชวัง'},
+      {emoji:'👘',name:'เช่าฮันบก (1 ชั่วโมง)',desc:'ใกล้พระราชวังคยองบกกุง'},
+      {emoji:'🎤',name:'นอเรบัง (1ชม. ห้องเล็ก)',desc:'คาราโอเกะเกาหลีต่อคน'},
+      {emoji:'🛍️',name:'มาสก์หน้าเมียงดง',desc:'ชีทมาสก์จากแผงขาย'},
+      {emoji:'🧴',name:'เซรั่ม K-beauty',desc:'ที่ Olive Young หรือ Daiso'},
+      {emoji:'🏨',name:'ที่พักโฮสเทลห้องรวม',desc:'ต่อคืนในโซล/ปูซาน'},
+    ],
+    compareItems:[
+      {item:'บิ๊กแมค',desc:'ราคาแมคโดนัลด์เกาหลี'},
+      {item:'สตาร์บัคส์ลาเต้ (ขนาดใหญ่)',desc:'ถูกกว่าไทยเล็กน้อย'},
+      {item:'ตั๋วหนัง',desc:'CGV ที่นั่งมาตรฐาน'},
+      {item:'ฟิตเนส (รายเดือน)',desc:'ฟิตเนสท้องถิ่น'},
+      {item:'ตัดผม (ชาย)',desc:'ร้านตัดผมท้องถิ่น'},
+    ],
+    nomadCosts:[
+      {label:'โคเวิร์กกิ้งสเปซ (1 วัน)',desc:'FastFive, WeWork'},
+      {label:'ทำงานในคาเฟ่ (กาแฟ+WiFi)',desc:'เกือบทุกคาเฟ่อนุญาตใช้แล็ปท็อป'},
+      {label:'ซิมการ์ด (30 วัน ไม่จำกัด)',desc:'KT, SKT ซิมนักท่องเที่ยว'},
+      {label:'เช่า Pocket WiFi (1 วัน)',desc:'มีที่สนามบิน'},
+      {label:'ห้องสตูดิโอ (1 เดือน)',desc:'โกซีวอนในโซล'},
+      {label:'บัตรรายเดือนรถไฟใต้ดิน',desc:'พาสรายเดือนรถไฟใต้ดินโซล'},
+    ],
+  },
+  es:{
+    badge:'💰 Tipo de Cambio en Vivo · Actualizado Diariamente',
+    subtitle:'¡Descubre qué puede comprar tu dinero en Corea!<br>Precios reales, experiencias reales.',
+    selectCurrency:'Selecciona tu Moneda', yourAmount:'Tu cantidad',
+    canBuy:(s,a)=>`En Corea, <span style="color:var(--gold)">${s}${a.toLocaleString()}</span> puede comprar...`,
+    shareBtn:'📤 Compartir Resultado', shareSub:'¡Comparte con tus amigos que planean visitar Corea! 🇰🇷',
+    copyBtn:'📋 Copiar y Compartir', copiedBtn:'✅ ¡Copiado!',
+    tipsTitle:'💡 Consejos de Dinero en Corea',
+    compareTitle:'📊 Corea vs Tu País — Comparación de Precios',
+    nomadTitle:'Trabajando en Corea', nomadSub:'Costos para nómadas digitales y visitantes de larga estancia',
+    liveRate:(d)=>`✅ Tasa en vivo de hoy · ${d}`, offlineRate:'⚠️ Tasa sin conexión (puede no estar actualizada)',
+    loading:'Cargando tipo de cambio...',
+    tips:[
+      {icon:'🙅',title:'¡Sin propinas!',text:'Las propinas no se esperan en Corea. Puedes eliminarlas completamente de tu presupuesto.'},
+      {icon:'🚇',title:'La tarjeta T-money ahorra 30%+',text:'Cómprala en cualquier tienda de conveniencia por ₩2,500. Tarifas con descuento + transbordos gratis en 30 min.'},
+      {icon:'🏪',title:'Las tiendas de conveniencia son tus mejores amigas.',text:'CU, GS25, 7-Eleven — comida completa por menos de ₩3,000. Abiertas 24/7.'},
+      {icon:'💳',title:'Efectivo vs Tarjeta:',text:'La mayoría acepta tarjetas, pero mercados y puestos callejeros solo efectivo. Lleva ₩50,000.'},
+      {icon:'🍜',title:'Come donde comen los locales.',text:'"백반집" ofrecen arroz + 4-5 acompañamientos por ₩7,000~9,000. Mucho más barato que zonas turísticas.'},
+    ],
+    items:[
+      {emoji:'🍚',name:'Gimbap (김밥)',desc:'Rollo de arroz coreano — ¡la mejor comida económica!'},
+      {emoji:'🍜',name:'Ramyeon en tienda de conveniencia',desc:'Fideos recién hechos en GS25/CU'},
+      {emoji:'☕',name:'Americano (café local)',desc:'En una cafetería local, no Starbucks'},
+      {emoji:'🍗',name:'Pollo frito (치킨)',desc:'Medio pollo por app de delivery'},
+      {emoji:'🍱',name:'Set de tienda de conveniencia',desc:'Kimbap triangular ×2 + bebida'},
+      {emoji:'🥩',name:'BBQ coreano (삼겹살)',desc:'Por persona en restaurante local'},
+      {emoji:'🚇',name:'Metro de Seúl (1 viaje)',desc:'Con tarjeta T-money'},
+      {emoji:'🚌',name:'Autobús urbano (1 viaje)',desc:'T-money (trasbordo gratis!)'},
+      {emoji:'🚕',name:'Kakao Taxi (tarifa base)',desc:'Tarifa inicial en Seúl'},
+      {emoji:'🏯',name:'Entrada al Palacio Gyeongbokgung',desc:'Entrada al palacio'},
+      {emoji:'👘',name:'Alquiler de Hanbok (1hr)',desc:'Cerca del Palacio Gyeongbokgung'},
+      {emoji:'🎤',name:'Norebang (1hr, sala pequeña)',desc:'Karaoke coreano por persona'},
+      {emoji:'🛍️',name:'Mascarilla de Myeongdong',desc:'Mascarilla en puestos callejeros'},
+      {emoji:'🧴',name:'Sérum K-beauty (farmacia)',desc:'En Olive Young o Daiso'},
+      {emoji:'🏨',name:'Cama en hostal',desc:'Por noche en Seúl/Busan'},
+    ],
+    compareItems:[
+      {item:'Big Mac',desc:"Precio McDonald's Corea"},
+      {item:'Latte Starbucks (Grande)',desc:'Ligeramente más barato que en EE.UU.'},
+      {item:'Entrada al cine',desc:'Asiento estándar CGV'},
+      {item:'Gimnasio (mensual)',desc:'Membresía gimnasio local'},
+      {item:'Corte de pelo (hombre)',desc:'En una barbería local'},
+    ],
+    nomadCosts:[
+      {label:'Coworking (1 día)',desc:'FastFive, WeWork'},
+      {label:'Trabajar en café (café + WiFi)',desc:'La mayoría de cafés permiten trabajar'},
+      {label:'SIM card (30 días, ilimitado)',desc:'SIM turista KT, SKT'},
+      {label:'Alquiler Pocket WiFi (1 día)',desc:'Disponible en aeropuertos'},
+      {label:'Apartamento estudio (1 mes)',desc:'Goshiwon en Seúl'},
+      {label:'Pase mensual metro',desc:'Pase mensual metro de Seúl'},
+    ],
+  },
+  pt:{
+    badge:'💰 Taxa de Câmbio ao Vivo · Atualizada Diariamente',
+    subtitle:'Veja o que seu dinheiro pode comprar na Coreia!<br>Preços reais, experiências reais.',
+    selectCurrency:'Selecione sua Moeda', yourAmount:'Sua quantia',
+    canBuy:(s,a)=>`Na Coreia, <span style="color:var(--gold)">${s}${a.toLocaleString()}</span> pode comprar...`,
+    shareBtn:'📤 Compartilhar Resultado', shareSub:'Compartilhe com amigos que planejam visitar a Coreia! 🇰🇷',
+    copyBtn:'📋 Copiar e Compartilhar', copiedBtn:'✅ Copiado!',
+    tipsTitle:'💡 Dicas de Dinheiro na Coreia',
+    compareTitle:'📊 Coreia vs Seu País — Comparação de Preços',
+    nomadTitle:'Trabalhando na Coreia', nomadSub:'Custos para nômades digitais e visitantes de longa estadia',
+    liveRate:(d)=>`✅ Taxa ao vivo de hoje · ${d}`, offlineRate:'⚠️ Taxa offline (pode não ser atual)',
+    loading:'Carregando taxa de câmbio...',
+    tips:[
+      {icon:'🙅',title:'Sem cultura de gorjeta!',text:'Gorjetas não são esperadas na Coreia. Remova completamente do seu orçamento.'},
+      {icon:'🚇',title:'Cartão T-money economiza 30%+',text:'Compre em qualquer conveniência por ₩2,500. Tarifas com desconto + transferências grátis em 30 min.'},
+      {icon:'🏪',title:'Lojas de conveniência são suas melhores amigas.',text:'CU, GS25, 7-Eleven — refeição completa por menos de ₩3,000. Abertas 24h.'},
+      {icon:'💳',title:'Dinheiro vs Cartão:',text:'A maioria aceita cartão, mas mercados e barracas só aceitam dinheiro. Tenha ₩50,000 em mãos.'},
+      {icon:'🍜',title:'Coma onde os locais comem.',text:'"백반집" oferecem arroz + 4-5 acompanhamentos por ₩7,000~9,000. Muito mais barato que áreas turísticas.'},
+    ],
+    items:[
+      {emoji:'🍚',name:'Gimbap (김밥)',desc:'Rolinho de arroz coreano — a melhor refeição econômica!'},
+      {emoji:'🍜',name:'Ramyeon na conveniência',desc:'Macarrão fresquinho no GS25/CU'},
+      {emoji:'☕',name:'Americano (cafeteria local)',desc:'Numa cafeteria local, não Starbucks'},
+      {emoji:'🍗',name:'Frango frito (치킨)',desc:'Meio frango pelo app de delivery'},
+      {emoji:'🍱',name:'Set da conveniência',desc:'Triângulo kimbap ×2 + bebida'},
+      {emoji:'🥩',name:'Churrasco coreano (삼겹살)',desc:'Por pessoa em restaurante local'},
+      {emoji:'🚇',name:'Metrô de Seul (1 viagem)',desc:'Com cartão T-money'},
+      {emoji:'🚌',name:'Ônibus urbano (1 viagem)',desc:'T-money (transferência grátis!)'},
+      {emoji:'🚕',name:'Kakao Taxi (tarifa inicial)',desc:'Tarifa inicial em Seul'},
+      {emoji:'🏯',name:'Entrada no Palácio Gyeongbokgung',desc:'Ingresso do palácio'},
+      {emoji:'👘',name:'Aluguel de Hanbok (1hr)',desc:'Perto do Palácio Gyeongbokgung'},
+      {emoji:'🎤',name:'Norebang (1hr, sala pequena)',desc:'Karaokê coreano por pessoa'},
+      {emoji:'🛍️',name:'Máscara facial de Myeongdong',desc:'Máscara em barracas de rua'},
+      {emoji:'🧴',name:'Sérum K-beauty (farmácia)',desc:'Na Olive Young ou Daiso'},
+      {emoji:'🏨',name:'Cama em hostel',desc:'Por noite em Seul/Busan'},
+    ],
+    compareItems:[
+      {item:'Big Mac',desc:"Preço do McDonald's Coreia"},
+      {item:'Latte Starbucks (Grande)',desc:'Ligeiramente mais barato que no Brasil'},
+      {item:'Ingresso de cinema',desc:'Assento padrão CGV'},
+      {item:'Academia (mensal)',desc:'Mensalidade academia local'},
+      {item:'Corte de cabelo (homem)',desc:'Em uma barbearia local'},
+    ],
+    nomadCosts:[
+      {label:'Coworking (1 dia)',desc:'FastFive, WeWork'},
+      {label:'Trabalhar em café (café + WiFi)',desc:'A maioria dos cafés permite trabalhar'},
+      {label:'Chip SIM (30 dias, ilimitado)',desc:'SIM turista KT, SKT'},
+      {label:'Aluguel Pocket WiFi (1 dia)',desc:'Disponível nos aeroportos'},
+      {label:'Apartamento studio (1 mês)',desc:'Goshiwon em Seul'},
+      {label:'Passe mensal metrô',desc:'Passe mensal metrô de Seul'},
+    ],
+  },
+  ru:{
+    badge:'💰 Актуальный курс валют · Обновляется ежедневно',
+    subtitle:'Узнайте, что можно купить в Корее на ваши деньги!<br>Реальные цены, реальный опыт.',
+    selectCurrency:'Выберите валюту', yourAmount:'Сумма',
+    canBuy:(s,a)=>`В Корее за <span style="color:var(--gold)">${s}${a.toLocaleString()}</span> можно купить...`,
+    shareBtn:'📤 Поделиться', shareSub:'Поделитесь с друзьями, планирующими поездку в Корею! 🇰🇷',
+    copyBtn:'📋 Скопировать и поделиться', copiedBtn:'✅ Скопировано!',
+    tipsTitle:'💡 Советы по деньгам в Корее',
+    compareTitle:'📊 Корея vs Ваша страна — Сравнение цен',
+    nomadTitle:'Работа в Корее', nomadSub:'Расходы для цифровых кочевников и долгосрочных визитёров',
+    liveRate:(d)=>`✅ Актуальный курс на сегодня · ${d}`, offlineRate:'⚠️ Офлайн-курс (может быть неактуальным)',
+    loading:'Загрузка курса валют...',
+    tips:[
+      {icon:'🙅',title:'Нет культуры чаевых!',text:'В Корее чаевые не приняты и могут даже считаться неуважением. Исключите их из бюджета.'},
+      {icon:'🚇',title:'Карта T-money экономит 30%+',text:'Купите в любом магазине за ₩2,500. Скидки на проезд + бесплатные пересадки в течение 30 минут.'},
+      {icon:'🏪',title:'Магазины у дома — ваш лучший друг.',text:'CU, GS25, 7-Eleven — полноценная еда менее чем за ₩3,000. Работают круглосуточно.'},
+      {icon:'💳',title:'Наличные vs Карта:',text:'Большинство мест принимают карты, но уличные лотки — только наличные. Держите при себе ₩50,000.'},
+      {icon:'🍜',title:'Ешьте там, где едят местные.',text:'"백반집" предлагают рис + 4-5 закусок всего за ₩7,000~9,000. Намного дешевле туристических зон.'},
+    ],
+    items:[
+      {emoji:'🍚',name:'Гимбап (김밥)',desc:'Корейский рисовый рулет — лучшая бюджетная еда!'},
+      {emoji:'🍜',name:'Рамён в магазине у дома',desc:'Свежеприготовленный в GS25/CU'},
+      {emoji:'☕',name:'Американо (местное кафе)',desc:'В местном кафе, не Starbucks'},
+      {emoji:'🍗',name:'Жареная курица (치킨)',desc:'Полкурицы через приложение доставки'},
+      {emoji:'🍱',name:'Сет из магазина у дома',desc:'Треугольный гимбап ×2 + напиток'},
+      {emoji:'🥩',name:'Корейское BBQ (삼겹살)',desc:'На одного человека в местном ресторане'},
+      {emoji:'🚇',name:'Метро Сеула (1 поездка)',desc:'С картой T-money'},
+      {emoji:'🚌',name:'Городской автобус (1 поездка)',desc:'T-money (бесплатная пересадка!)'},
+      {emoji:'🚕',name:'Kakao Taxi (начальный тариф)',desc:'Начальный тариф в Сеуле'},
+      {emoji:'🏯',name:'Вход во дворец Кёнбоккун',desc:'Билет во дворец'},
+      {emoji:'👘',name:'Аренда ханбок (1 час)',desc:'Рядом с дворцом Кёнбоккун'},
+      {emoji:'🎤',name:'Норебан (1 час, малый зал)',desc:'Корейское караоке на человека'},
+      {emoji:'🛍️',name:'Маска для лица с Мёндона',desc:'Тканевая маска на уличных лотках'},
+      {emoji:'🧴',name:'K-beauty сыворотка (аптека)',desc:'В Olive Young или Daiso'},
+      {emoji:'🏨',name:'Кровать в хостеле',desc:'За ночь в Сеуле/Пусане'},
+    ],
+    compareItems:[
+      {item:'Биг Мак',desc:'Цена в McDonald\'s Кореи'},
+      {item:'Латте Starbucks (Grande)',desc:'Чуть дешевле, чем в США'},
+      {item:'Билет в кино',desc:'Стандартное место CGV'},
+      {item:'Тренажёрный зал (месяц)',desc:'Членство в местном зале'},
+      {item:'Стрижка (мужская)',desc:'В местной парикмахерской'},
+    ],
+    nomadCosts:[
+      {label:'Коворкинг (1 день)',desc:'FastFive, WeWork'},
+      {label:'Работа в кафе (кофе + WiFi)',desc:'Почти все кафе разрешают работать с ноутбуком'},
+      {label:'SIM-карта (30 дней, безлимит)',desc:'Туристическая SIM KT, SKT'},
+      {label:'Аренда Pocket WiFi (1 день)',desc:'Доступно в аэропортах'},
+      {label:'Студия (1 месяц)',desc:'Косивон в Сеуле'},
+      {label:'Месячный проездной на метро',desc:'Месячный абонемент метро Сеула'},
+    ],
+  },
+};
+
+// 통화 → 언어 매핑
+const currencyLangMap = {
+  USD:'en',EUR:'en',GBP:'en',AUD:'en',CAD:'en',SGD:'en',MYR:'en',
+  JPY:'ja',
+  CNY:'zh',
+  THB:'th',
+  BRL:'pt',
+  MXN:'es',
+  RUB:'ru',
+};
+
+const currencies = [
+  {code:'USD',symbol:'$', flag:'🇺🇸',amounts:[1,5,10,20,50,100]},
+  {code:'EUR',symbol:'€', flag:'🇪🇺',amounts:[1,5,10,20,50,100]},
+  {code:'GBP',symbol:'£', flag:'🇬🇧',amounts:[1,5,10,20,50,100]},
+  {code:'JPY',symbol:'¥', flag:'🇯🇵',amounts:[500,1000,2000,5000,10000,20000]},
+  {code:'CNY',symbol:'¥', flag:'🇨🇳',amounts:[10,20,50,100,200,500]},
+  {code:'AUD',symbol:'A$',flag:'🇦🇺',amounts:[1,5,10,20,50,100]},
+  {code:'CAD',symbol:'C$',flag:'🇨🇦',amounts:[1,5,10,20,50,100]},
+  {code:'SGD',symbol:'S$',flag:'🇸🇬',amounts:[1,5,10,20,50,100]},
+  {code:'THB',symbol:'฿', flag:'🇹🇭',amounts:[50,100,200,500,1000,2000]},
+  {code:'MYR',symbol:'RM',flag:'🇲🇾',amounts:[5,10,20,50,100,200]},
+  {code:'BRL',symbol:'R$',flag:'🇧🇷',amounts:[5,10,20,50,100,200]},
+  {code:'MXN',symbol:'$', flag:'🇲🇽',amounts:[20,50,100,200,500,1000]},
+  {code:'RUB',symbol:'₽', flag:'🇷🇺',amounts:[100,500,1000,2000,5000,10000]},
+];
+
+const itemPrices=[3500,1500,4500,20000,4000,15000,1400,1300,4800,3000,20000,15000,1000,15000,20000];
+const itemTags=['food','food','food','food','food','food','transport','transport','transport','experience','experience','experience','shopping','shopping','experience'];
+const compareKRW=[6400,6100,15000,50000,12000];
+const nomadKRW=[15000,5000,35000,5500,800000,62000];
+
+let currentCurrency=currencies[0],currentLang='en',currentRate=1300,currentAmount=10,ratesCache=null;
+
+function applyLang(lang){
+  currentLang=lang;
+  const t=i18n[lang]||i18n.en;
+  document.getElementById('badgeText').textContent=t.badge;
+  document.getElementById('headerSubtitle').innerHTML=t.subtitle;
+  document.getElementById('labelSelectCurrency').textContent=t.selectCurrency;
+  document.getElementById('labelYourAmount').textContent=t.yourAmount;
+  document.getElementById('shareBtn').innerHTML=t.shareBtn;
+  document.getElementById('shareSub').textContent=t.shareSub;
+  document.getElementById('copyBtn').innerHTML=t.copyBtn;
+  document.getElementById('tipsTitle').textContent=t.tipsTitle;
+  document.getElementById('compareTitle').textContent=t.compareTitle;
+  document.getElementById('nomadTitle').textContent=t.nomadTitle;
+  document.getElementById('nomadSub').textContent=t.nomadSub;
+  document.getElementById('tipsList').innerHTML=t.tips.map(tip=>
+    `<div class="tip-item"><span class="tip-icon">${tip.icon}</span><div class="tip-text"><strong>${tip.title}</strong> ${tip.text}</div></div>`
+  ).join('');
+  updateDisplay();
+}
+
+async function fetchRates(){
+  document.getElementById('rateSource').textContent=(i18n[currentLang]||i18n.en).loading;
+  try{
+    const res=await fetch('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/krw.json');
+    const data=await res.json();
+    ratesCache=data.krw;
+    const today=new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+    document.getElementById('lastUpdated').textContent=today;
+    document.getElementById('rateSource').textContent=(i18n[currentLang]||i18n.en).liveRate(today);
+    updateDisplay();
+  }catch(e){
+    ratesCache={usd:0.00075,eur:0.00069,gbp:0.00059,jpy:0.11,cny:0.0054,aud:0.0012,cad:0.001,sgd:0.001,thb:0.026,myr:0.0034,brl:0.0042,mxn:0.014,rub:0.0088};
+    document.getElementById('rateSource').textContent=(i18n[currentLang]||i18n.en).offlineRate;
+    document.getElementById('lastUpdated').textContent='Fallback';
+    updateDisplay();
+  }
+}
+
+function getKRW(code){
+  if(!ratesCache)return 1300;
+  const r=ratesCache[code.toLowerCase()];
+  return r?Math.round(1/r):1300;
+}
+
+function updateDisplay(){
+  const t=i18n[currentLang]||i18n.en;
+  const rate=getKRW(currentCurrency.code);
+  currentRate=rate;
+  const krw=Math.round(currentAmount*rate);
+  document.getElementById('amountDisplay').textContent=`${currentCurrency.symbol}${currentAmount.toLocaleString()}`;
+  document.getElementById('krwDisplay').textContent=`≈ ₩${krw.toLocaleString()} KRW`;
+  document.getElementById('rateDisplay').textContent=`1 ${currentCurrency.code} ≈ ₩${rate.toLocaleString()}`;
+  document.getElementById('resultsTitle').innerHTML=t.canBuy(currentCurrency.symbol,currentAmount);
+  renderItems(krw,t);renderCompare(rate,t);renderNomad(rate,t);
+}
+
+function renderItems(krw,t){
+  document.getElementById('itemsGrid').innerHTML=t.items.map((item,i)=>{
+    const qty=krw/itemPrices[i];
+    const hl=qty>=1&&qty<20;
+    return`<div class="item-card${hl?' highlight':''}">
+      <span class="ic-emoji">${item.emoji}</span>
+      <span class="ic-tag tag-${itemTags[i]}">${itemTags[i]}</span>
+      <div class="ic-qty">${qty>=1?Math.floor(qty):'<1'}<span class="ic-unit"> ×</span></div>
+      <div class="ic-name">${item.name}</div>
+      <div class="ic-price">₩${itemPrices[i].toLocaleString()} · ${item.desc}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderCompare(rate,t){
+  document.getElementById('compareRows').innerHTML=t.compareItems.map((item,i)=>{
+    const fp=(compareKRW[i]/rate).toFixed(2);
+    return`<div class="compare-row">
+      <div class="cr-item"><div>${item.item}</div><div class="cr-desc">${item.desc}</div></div>
+      <div class="cr-arrow">→</div>
+      <div class="cr-krw"><div>₩${compareKRW[i].toLocaleString()}</div><div style="color:var(--text-faint);font-size:10px">${currentCurrency.symbol}${fp}</div></div>
+    </div>`;
+  }).join('');
+}
+
+function renderNomad(rate,t){
+  document.getElementById('nomadGrid').innerHTML=t.nomadCosts.map((item,i)=>{
+    const fp=(nomadKRW[i]/rate).toFixed(2);
+    return`<div class="nomad-item">
+      <div class="ni-label">${item.label}</div>
+      <div class="ni-val">${currentCurrency.symbol}${fp}</div>
+      <div class="ni-krw">₩${nomadKRW[i].toLocaleString()} · ${item.desc}</div>
+    </div>`;
+  }).join('');
+}
+
+function initCurrencyGrid(){
+  document.getElementById('currencyGrid').innerHTML=currencies.map(c=>
+    `<button class="currency-btn${c.code==='USD'?' active':''}" onclick="selectCurrency('${c.code}')">
+      <span class="flag">${c.flag}</span><span class="code">${c.code}</span>
+    </button>`).join('');
+}
+
+function initAmountBtns(){
+  const amounts=currentCurrency.amounts;
+  currentAmount=amounts[2];
+  document.getElementById('amountBtns').innerHTML=amounts.map(a=>
+    `<button class="amount-btn${a===currentAmount?' active':''}" onclick="selectAmount(${a})">${currentCurrency.symbol}${a.toLocaleString()}</button>`
+  ).join('');
+}
+
+function selectCurrency(code){
+  currentCurrency=currencies.find(c=>c.code===code);
+  document.querySelectorAll('.currency-btn').forEach((b,i)=>b.classList.toggle('active',currencies[i]?.code===code));
+  const amounts=currentCurrency.amounts;
+  currentAmount=amounts[2];
+  document.getElementById('amountBtns').innerHTML=amounts.map(a=>
+    `<button class="amount-btn${a===currentAmount?' active':''}" onclick="selectAmount(${a})">${currentCurrency.symbol}${a.toLocaleString()}</button>`
+  ).join('');
+  const lang=currencyLangMap[code]||'en';
+  applyLang(lang);
+}
+
+function selectAmount(amount){
+  currentAmount=amount;
+  document.querySelectorAll('.amount-btn').forEach(b=>{
+    b.classList.toggle('active',parseInt(b.textContent.replace(/[^\d]/g,''))===amount);
+  });
+  updateDisplay();
+}
+
+function showShare(){
+  const t=i18n[currentLang]||i18n.en;
+  const krw=Math.round(currentAmount*currentRate);
+  const top=t.items.filter((_,i)=>krw/itemPrices[i]>=1).slice(0,3)
+    .map((item,idx)=>`${item.emoji} ${Math.floor(krw/itemPrices[idx])}× ${item.name}`).join('<br>');
+  document.getElementById('shareMain').innerHTML=`${currentCurrency.symbol}${currentAmount} → ₩${krw.toLocaleString()}<br><br>${top}`;
+  const el=document.getElementById('shareResult');
+  el.classList.remove('show');void el.offsetWidth;el.classList.add('show');
+  el.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function copyShare(){
+  const t=i18n[currentLang]||i18n.en;
+  const krw=Math.round(currentAmount*currentRate);
+  const items=t.items.filter((_,i)=>krw/itemPrices[i]>=1).slice(0,5)
+    .map((item,i)=>`${item.emoji} ${Math.floor(krw/itemPrices[i])}× ${item.name}`).join('\n');
+  const text=`${currentCurrency.symbol}${currentAmount} in Korea (≈₩${krw.toLocaleString()}):\n\n${items}\n\n👉 https://junburi.github.io/korea-won-power\n#Korea #Travel #KoreanWon`;
+  navigator.clipboard.writeText(text).then(()=>{
+    const btn=document.getElementById('copyBtn');
+    btn.textContent=t.copiedBtn;
+    setTimeout(()=>btn.innerHTML=t.copyBtn,2000);
+  });
+}
+
+initCurrencyGrid();
+currentAmount=currencies[0].amounts[2];
+initAmountBtns();
+
+// 콘텐츠 준비 전 결과 섹션 숨김 → 부드럽게 등장
+const rs=document.getElementById('resultsSection');
+rs.style.opacity='0';
+rs.style.transition='opacity 0.35s ease';
+
+applyLang('en');
+fetchRates().then(()=>{
+  requestAnimationFrame(()=>{ rs.style.opacity='1'; });
+}).catch(()=>{
+  rs.style.opacity='1';
+});
+</script>
+</body>
+</html>
